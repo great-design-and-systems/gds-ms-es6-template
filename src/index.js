@@ -1,8 +1,26 @@
-import http from 'http';
+import express from 'express';
+import { GDSDatabase, GDSServer, GDSServices, GDSUtil } from 'gds-config';
+const app = express();
+const PORT = process.env.PORT || 5000;
 
-http.createServer((req, res) => {
-    res.writeHead(200, { 'Content-Type': 'text/plain' });
-    res.end('Hello World\n');
-}).listen(3000, 'localhost');
+import EventResource from './boundary/event-resource';
 
-console.log('Server running at http://localhost:3000/');
+new GDSServices().initServices((serviceError, result) => {
+    new GDSDatabase().connect((errDB) => {
+        if (errDB) {
+            console.error(errDB);
+        } else {
+            new GDSServer(app);
+            new GDSUtil().getLogger(() => {
+                app.listen(PORT, () => {
+                    global.gdsLogger.logInfo('Express is listening to port ' + PORT);
+                    new EventResource(app);
+                });
+            })
+
+        }
+    });
+
+});
+
+export default app;
