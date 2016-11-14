@@ -22,7 +22,6 @@ export default class EventResource {
 
     app.post(API + 'create-event', (req, res) => {
       eventService.createEvent(req.body.name, req.body.eventType, req.body.service, (err, result) => {
-
         if (err) {
           res.status(500).send(new GDSDomainDTO('ERROR_MESSAGE',
             err.message

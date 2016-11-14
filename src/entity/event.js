@@ -9,6 +9,7 @@ const EventSchema = mongoose.Schema({
   },
   eventType: {
     type: String,
+    enum: ['DATA', 'PROCESS', 'PROCEDURE', 'SCHEDULED'],
     required: [true, 'Event type is required']
   },
   service: {

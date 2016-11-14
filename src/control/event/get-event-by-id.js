@@ -1,4 +1,4 @@
-import EventModel from '../entity/event';
+import EventModel from '../../entity/event';
 
 export default class GetEventById {
   constructor(eventId, callback) {

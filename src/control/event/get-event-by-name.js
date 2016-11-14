@@ -1,4 +1,4 @@
-import EventModel from '../entity/event';
+import EventModel from '../../entity/event';
 export default class GetEventByName {
   constructor(eventName, callback) {
     EventModel.findOne({
