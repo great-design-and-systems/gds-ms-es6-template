@@ -17,7 +17,6 @@ new GDSServices().initServices((serviceError, result) => {
                     new EventResource(app);
                 });
             })
-
         }
     });
 

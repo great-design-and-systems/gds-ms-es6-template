@@ -6,7 +6,7 @@ export default class RemoveEventById {
             _id: id
         }, (err) => {
             if (err) {
-                console.error(err);
+                global.gdsLogger.error(err);
                 callback({
                     message: 'Failed saving event'
                 });

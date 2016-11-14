@@ -1,5 +1,4 @@
 import EventModel from '../entity/event';
-
 export default class CreateEvent {
     constructor(name, eventType, service, callback) {
         EventModel.create({
@@ -8,7 +7,7 @@ export default class CreateEvent {
             service: service
         }, (err, result) => {
             if (err) {
-                console.error(err);
+                global.gdsLogger.logError(err);
                 callback({
                     message: 'Failed saving event'
                 });
