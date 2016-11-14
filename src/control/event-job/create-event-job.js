@@ -1,4 +1,4 @@
-import EventJobModel from '../entity/event-job';
+import EventJobModel from '../../entity/event-job';
 export default class CreateEventJob {
   constructor(eventName, triggeredBy, callback) {
     EventJobModel.create({
