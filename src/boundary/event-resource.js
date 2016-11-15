@@ -9,6 +9,7 @@ const API = process.env.API_NAME || '/api/event/';
 export default class EventResource {
   constructor(app) {
     const eventService = new EventService();
+
     app.get('/', (req, res) => {
       const domain = new GDSDomainDTO();
       domain.addPost('createEvent', 'http://' + req.headers.host + API + 'create-event');
@@ -17,6 +18,7 @@ export default class EventResource {
       domain.addPut('updateEvent', 'http://' + req.headers.host + API + 'update-event/:eventId');
       domain.addDelete('removeEvent', 'http://' + req.headers.host + API + 'remove-event/:eventId');
       domain.addGet('getEventByName', 'http://' + req.headers.host + API + 'get-event-by-name/:eventName');
+      domain.addPost('createJob', 'http://' + req.headers.host + API + 'create-job/:eventName');
       res.status(200).send(domain);
     });
 

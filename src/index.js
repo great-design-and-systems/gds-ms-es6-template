@@ -4,6 +4,7 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 import EventResource from './boundary/event-resource';
+import EventJobResource from './boundary/event-job-resource';
 
 new GDSServices().initServices((serviceError, result) => {
     new GDSDatabase().connect((errDB) => {
@@ -15,6 +16,7 @@ new GDSServices().initServices((serviceError, result) => {
                 app.listen(PORT, () => {
                     global.gdsLogger.logInfo('Express is listening to port ' + PORT);
                     new EventResource(app);
+                    new EventJobResource(app);
                 });
             })
         }
