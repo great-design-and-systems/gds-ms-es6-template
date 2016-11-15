@@ -8,7 +8,7 @@ const EventJobSchema = mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ['IN_PROGRESS', 'COMPLETED', 'LOCKED', 'STOPPED', 'SCHEDULED', 'NEW'],
+        enum: ['IN_PROGRESS', 'COMPLETED', 'LOCKED', 'STOPPED', 'SCHEDULED', 'NEW', 'ON_HOLD'],
         required: [true, 'Event status is required']
     },
     triggeredBy: {
