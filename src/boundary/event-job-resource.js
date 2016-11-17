@@ -11,7 +11,12 @@ export default class EventJobResource {
         app.post(API + 'create-job/:eventName', (req, res) => {
             const eventName = req.params.eventName;
             eventJobService.createEventJob(eventName, req.body, (err, result) => {
-                
+                if (err) {
+                    res.status(500).send(new GDSDomainDTO('ERROR_MESSAGE', err.message));
+                } else {
+                    const domain = new GDSDomainDTO('JOB', result);
+                    res.status(200).send(domain);
+                }
             });
         });
     }
