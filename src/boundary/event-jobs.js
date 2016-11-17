@@ -1,6 +1,8 @@
 import CreateEventJob from '../control/event-job/create-event-job';
 import RemoveEventJobById from '../control/event-job/remove-event-job-by-id';
 import GetEventByName from '../control/event/get-event-by-name';
+import CreateEventTypeProcess from '../control/event-type-process/create-event-type-process';
+import lodash from 'lodash';
 
 export default class EventJobService {
     createEventJob(eventName, context, callback) {
@@ -16,8 +18,48 @@ export default class EventJobService {
 }
 
 function runProcessEvent(event, context, callback) {
-    new CreateEventJob(event.name, context.session, 'NEW', (err, processJob) => {
-
+    new CreateEventJob(event.name, context.session, 'NEW', (errorJob, processJob) => {
+        if (errorJob) {
+            global.gdsLogger.error(errorJob);
+            new RemoveEventJobById(processJob._id, () => {
+                callback({
+                    message: 'Failed creating event job for process event type'
+                });
+            });
+        } else {
+            new CreateEventTypeProcess(processJob._id, context.data.isAsync, (errEventTypeProcess, resultProcess) => {
+                if (errEventTypeProcess) {
+                    global.gdsLogger.logError(errEventTypeProcess);
+                    new RemoveEventJobById(processJob._id, () => {
+                        callback({
+                            message: 'Failed creating event type process for job id ' + processJob._id
+                        });
+                    });
+                } else { }
+            });
+        }
     });
 }
 
+function processInput(eventJobId, input, callback) {
+    lodash.forEach(input, (inputType) => {
+        switch (inputType) {
+            case 'body':
+            case 'BODY':
+                break;
+            case 'header':
+            case 'HEADER':
+                break;
+            case 'path':
+            case 'PATH':
+                break;
+            case 'query':
+            case 'QUERY':
+                break;
+        }
+    });
+}
+
+function parseBody(body) {
+
+}

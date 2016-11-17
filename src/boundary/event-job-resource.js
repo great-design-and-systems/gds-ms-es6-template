@@ -11,7 +11,7 @@ export default class EventJobResource {
         app.post(API + 'create-job/:eventName', (req, res) => {
             const eventName = req.params.eventName;
             eventJobService.createEventJob(eventName, req.body, (err, result) => {
-
+                
             });
         });
     }
