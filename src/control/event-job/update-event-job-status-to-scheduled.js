@@ -1,13 +1,13 @@
 import EventJobModel from '../../entity/event-job';
-export default class UpdateEventJobStatusToNew {
+export default class UpdateEventJobStatusToScheduled {
   constructor(eventJobId, callback) {
     EventJobModel.findByIdAndUpdate(eventJobId, {
-      status: 'NEW'
+      status: 'SCHEDULED'
     }, (err, result) => {
       if (err) {
         global.gdsLogger.logError(err);
         callback({
-          message: 'Failed updating event job status to new'
+          message: 'Failed updating event job status to scheduled'
         });
       } else {
         callback(undefined, result);

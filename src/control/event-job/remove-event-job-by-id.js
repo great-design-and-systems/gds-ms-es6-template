@@ -5,7 +5,7 @@ export default class RemoveEventJobById {
             _id: eventJobId
         }, (err, result) => {
             if (err) {
-                global.gdsLogger.logErrror(err);
+                global.gdsLogger.logError(err);
                 callback({
                     message: 'Failed removing event job for ' + eventJobId
                 });

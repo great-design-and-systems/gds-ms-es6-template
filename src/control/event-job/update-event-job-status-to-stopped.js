@@ -1,8 +1,8 @@
 import EventJobModel from '../../entity/event-job';
-export default class UpdateEventJobStatusToNew {
+export default class UpdateEventJobStatusToStopped {
   constructor(eventJobId, callback) {
     EventJobModel.findByIdAndUpdate(eventJobId, {
-      status: 'NEW'
+      status: 'STOPPED'
     }, (err, result) => {
       if (err) {
         global.gdsLogger.logError(err);

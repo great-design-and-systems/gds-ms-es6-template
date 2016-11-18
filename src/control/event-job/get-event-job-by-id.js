@@ -1,13 +1,13 @@
 import EventJobModel from '../../entity/event-job';
-export default class UpdateEventJobStatusToNew {
+export default class GetEventJobById {
   constructor(eventJobId, callback) {
-    EventJobModel.findByIdAndUpdate(eventJobId, {
-      status: 'NEW'
+    EventJobModel.find({
+      _id: eventJobId
     }, (err, result) => {
       if (err) {
         global.gdsLogger.logError(err);
         callback({
-          message: 'Failed updating event job status to new'
+          message: 'No batch event job found for id ' + eventJobId
         });
       } else {
         callback(undefined, result);
