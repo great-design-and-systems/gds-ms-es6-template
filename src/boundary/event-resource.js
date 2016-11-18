@@ -190,20 +190,25 @@ export default class EventResource {
           ));
         } else {
           const domain = new GDSDomainDTO('GET-JOB-BY-ID', result);
-          domain.addDelete('removeJob', 'http://' + req.headers.host + API + 'remove-job/' + result._id);
-          domain.addPut('setJobToInProgress', 'http://' + req.headers.host + API + 'job/' + result._id + '/set-status/IN_PROGRESS');
-          domain.addPut('setJobToCompleted', 'http://' + req.headers.host + API + 'job/' + result._id + '/set-status/COMPLETED');
-          domain.addPut('setJobToLocked', 'http://' + req.headers.host + API + 'job/' + result._id + '/set-status/LOCKED');
-          domain.addPut('setJobToStopped', 'http://' + req.headers.host + API + 'job/' + result._id + '/set-status/STOPPED');
-          domain.addPut('setJobToScheduled', 'http://' + req.headers.host + API + 'job/' + result._id + '/set-status/SCHEDULED');
-          domain.addPut('setJobToNew', 'http://' + req.headers.host + API + 'job/' + result._id + '/set-status/NEW');
-          domain.addPut('setJobToOnHold', 'http://' + req.headers.host + API + 'job/' + result._id + '/set-status/ON_HOLD');
-          res.status(200).send(domain);
+          if (result) {
+            domain.addDelete('removeJob', 'http://' + req.headers.host + API + 'remove-job/' + result._id);
+            domain.addPut('setJobToInProgress', 'http://' + req.headers.host + API + 'job/' + result._id + '/set-status/IN_PROGRESS');
+            domain.addPut('setJobToCompleted', 'http://' + req.headers.host + API + 'job/' + result._id + '/set-status/COMPLETED');
+            domain.addPut('setJobToLocked', 'http://' + req.headers.host + API + 'job/' + result._id + '/set-status/LOCKED');
+            domain.addPut('setJobToStopped', 'http://' + req.headers.host + API + 'job/' + result._id + '/set-status/STOPPED');
+            domain.addPut('setJobToScheduled', 'http://' + req.headers.host + API + 'job/' + result._id + '/set-status/SCHEDULED');
+            domain.addPut('setJobToNew', 'http://' + req.headers.host + API + 'job/' + result._id + '/set-status/NEW');
+            domain.addPut('setJobToOnHold', 'http://' + req.headers.host + API + 'job/' + result._id + '/set-status/ON_HOLD');
+            res.status(200).send(domain);
+          } else {
+            res.status(404).send(new GDSDomainDTO('JOB_NOT_FOUND', null));
+          }
+
         }
       });
     });
 
-    app.get(API + 'remove-job/:eventJobId', (req, res) => {
+    app.delete(API + 'remove-job/:eventJobId', (req, res) => {
       eventJobService.removeEventJob(req.params.eventJobId, (err, result) => {
         if (err) {
           res.status(500).send(new GDSDomainDTO('ERROR_MESSAGE',

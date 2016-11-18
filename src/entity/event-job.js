@@ -2,9 +2,9 @@ import mongoose from 'mongoose';
 import mongoosePaginate from 'mongoose-paginate';
 
 const EventJobSchema = mongoose.Schema({
-  eventId: {
+  eventName: {
     type: String,
-    required: [true, 'Event ID is required.']
+    required: [true, 'Event name is required.']
   },
   eventType: {
     type: String,

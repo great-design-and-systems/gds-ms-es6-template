@@ -14,6 +14,7 @@ import UpdateEventJobStatusToOnHold from '../control/event-job/update-event-job-
 import UpdateEventJobStatusToScheduled from '../control/event-job/update-event-job-status-to-scheduled';
 import UpdateEventJobStatusToStopped from '../control/event-job/update-event-job-status-to-stopped';
 import UpdateEventJobStatusToInProgress from '../control/event-job/update-event-job-status-to-in-progress';
+import RemoveEventJobById from '../control/event-job/remove-event-job-by-id';
 
 export default class EventJobService {
   createEventJob(eventName, context, callback) {
@@ -22,7 +23,7 @@ export default class EventJobService {
         case 'PROCESS':
           new RunProcessEvent(event, context, callback);
           break;
-      } 
+      }
     });
   }
   removeEventJob(eventJobId, callback) {
@@ -44,7 +45,13 @@ export default class EventJobService {
       }
 
       function removeContexts() {
-        new RemoveEventContextByJobId(eventJobId, callback);
+        new RemoveEventContextByJobId(eventJobId, (errorRemoveContext) => {
+          if (errorRemoveContext) {
+            callback(errorRemoveContext);
+          } else {
+            new RemoveEventJobById(eventJobId, callback);
+          }
+        });
       }
 
     });
