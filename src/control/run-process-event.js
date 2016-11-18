@@ -6,7 +6,6 @@ import ProcessInput from '../control/process-input';
 import lodash from 'lodash';
 import batch from 'batchflow';
 
-
 export default class RunProcessEvent {
   constructor(event, context, callback) {
     const resultJob = {};
