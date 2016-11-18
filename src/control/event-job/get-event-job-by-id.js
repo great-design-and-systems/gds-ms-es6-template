@@ -8,7 +8,13 @@ export default class GetEventJobById {
           message: 'No batch event job found for id ' + eventJobId
         });
       } else {
-        callback(undefined, result);
+        if (result) {
+          callback(undefined, result);
+        } else {
+          callback({
+            message: 'No batch event job found for id ' + eventJobId
+          });
+        }
       }
     });
   }

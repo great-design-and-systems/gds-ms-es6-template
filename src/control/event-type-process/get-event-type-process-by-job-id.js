@@ -11,7 +11,13 @@ export default class GetEventTypeProcessByJobId {
           message: 'Failed to get event type process for job id ' + eventJobId
         });
       } else {
-        callback(undefined, result);
+        if (result) {
+          callback(undefined, result);
+        } else {
+          callback({
+            message: 'Failed to get event type process for job id ' + eventJobId
+          });
+        }
       }
     });
   }

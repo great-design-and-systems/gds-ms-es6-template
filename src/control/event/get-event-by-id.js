@@ -8,10 +8,16 @@ export default class GetEventById {
       if (err) {
         global.gdsLogger.logError(err);
         callback({
-          message: 'Failed getting an event'
+          message: 'Failed getting event for id ' + eventId
         });
       } else {
-        callback(undefined, event);
+        if (event) {
+          callback(undefined, event);
+        } else {
+          callback({
+            message: 'Failed getting event for id ' + eventId
+          });
+        }
       }
     });
   }

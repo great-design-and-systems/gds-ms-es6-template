@@ -168,12 +168,12 @@ export default class EventResource {
           const domain = new GDSDomainDTO('JOB', result);
           domain.addDelete('removeJob', 'http://' + req.headers.host + API + 'remove-job/' + result.jobId);
           domain.addDelete('getJob', 'http://' + req.headers.host + API + 'get-job/' + result.jobId);
-          if (result) {
-            if (result.body) {
-              result.body.forEach((contextDTO) => {
+          if (result && result.context) {
+            if (result.context.body) {
+              result.context.body.forEach(contextDTO => {
                 contextDTO.addGet('getContextFieldById', 'http://' + req.headers.host + API + 'get-context-field-by-id/' + contextDTO.data._id);
                 contextDTO.addDelete('removeContextFieldById', 'http://' + req.headers.host + API + 'remove-context-field-by-id/' + contextDTO.data._id);
-                contextDTO.addPut('updateContextField', 'http://' + req.headers.host + API + 'update-context-field/:contextId' + contextDTO.data._id);
+                contextDTO.addPut('updateContextField', 'http://' + req.headers.host + API + 'update-context-field/' + contextDTO.data._id);
               });
             }
           }
