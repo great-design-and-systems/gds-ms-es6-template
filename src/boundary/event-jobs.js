@@ -15,8 +15,13 @@ import UpdateEventJobStatusToScheduled from '../control/event-job/update-event-j
 import UpdateEventJobStatusToStopped from '../control/event-job/update-event-job-status-to-stopped';
 import UpdateEventJobStatusToInProgress from '../control/event-job/update-event-job-status-to-in-progress';
 import RemoveEventJobById from '../control/event-job/remove-event-job-by-id';
+import GetEventJobs from '../control/event-job/get-event-jobs';
 
 export default class EventJobService {
+
+  getJobs(callback) {
+    new GetEventJobs(callback);
+  }
   createEventJob(eventName, context, callback) {
     new GetEventByName(eventName, (err, event) => {
       switch (event.eventType) {

@@ -26,7 +26,8 @@ export default class EventResource {
       domain.addGet('getContextFieldById', 'http://' + req.headers.host + API + 'get-context-field-by-id/:contextId');
       domain.addDelete('removeContextFieldById', 'http://' + req.headers.host + API + 'remove-context-field-by-id/:contextId');
       domain.addPut('updateContextField', 'http://' + req.headers.host + API + 'update-context-field/:contextId');
-      domain.addPut('updateJobStatus', 'http://' + req.headers.host + API + 'job/:eventJobId/set-status/:status');
+      domain.addPut('updateJobStatus', 'http://' + req.headers.host + API + 'jobs/:eventJobId/set-status/:status');
+      domain.addGet('getJobs', 'http://' + req.headers.host + API + 'jobs');
       res.status(200).send(domain);
     });
 
@@ -192,18 +193,17 @@ export default class EventResource {
           const domain = new GDSDomainDTO('GET-JOB-BY-ID', result);
           if (result) {
             domain.addDelete('removeJob', 'http://' + req.headers.host + API + 'remove-job/' + result._id);
-            domain.addPut('setJobToInProgress', 'http://' + req.headers.host + API + 'job/' + result._id + '/set-status/IN_PROGRESS');
-            domain.addPut('setJobToCompleted', 'http://' + req.headers.host + API + 'job/' + result._id + '/set-status/COMPLETED');
-            domain.addPut('setJobToLocked', 'http://' + req.headers.host + API + 'job/' + result._id + '/set-status/LOCKED');
-            domain.addPut('setJobToStopped', 'http://' + req.headers.host + API + 'job/' + result._id + '/set-status/STOPPED');
-            domain.addPut('setJobToScheduled', 'http://' + req.headers.host + API + 'job/' + result._id + '/set-status/SCHEDULED');
-            domain.addPut('setJobToNew', 'http://' + req.headers.host + API + 'job/' + result._id + '/set-status/NEW');
-            domain.addPut('setJobToOnHold', 'http://' + req.headers.host + API + 'job/' + result._id + '/set-status/ON_HOLD');
+            domain.addPut('setJobToInProgress', 'http://' + req.headers.host + API + 'jobs/' + result._id + '/set-status/IN_PROGRESS');
+            domain.addPut('setJobToCompleted', 'http://' + req.headers.host + API + 'jobs/' + result._id + '/set-status/COMPLETED');
+            domain.addPut('setJobToLocked', 'http://' + req.headers.host + API + 'jobs/' + result._id + '/set-status/LOCKED');
+            domain.addPut('setJobToStopped', 'http://' + req.headers.host + API + 'jobs/' + result._id + '/set-status/STOPPED');
+            domain.addPut('setJobToScheduled', 'http://' + req.headers.host + API + 'jobs/' + result._id + '/set-status/SCHEDULED');
+            domain.addPut('setJobToNew', 'http://' + req.headers.host + API + 'jobs/' + result._id + '/set-status/NEW');
+            domain.addPut('setJobToOnHold', 'http://' + req.headers.host + API + 'jobs/' + result._id + '/set-status/ON_HOLD');
             res.status(200).send(domain);
           } else {
             res.status(404).send(new GDSDomainDTO('JOB_NOT_FOUND', null));
           }
-
         }
       });
     });
@@ -221,7 +221,7 @@ export default class EventResource {
       });
     });
 
-    app.put(API + 'job/:eventJobId/set-status/:status', (req, res) => {
+    app.put(API + 'jobs/:eventJobId/set-status/:status', (req, res) => {
       eventJobService.updateStatus(req.params.eventJobId, req.params.status, (err, result) => {
         if (err) {
           res.status(500).send(new GDSDomainDTO('ERROR_MESSAGE',
@@ -229,6 +229,32 @@ export default class EventResource {
           ));
         } else {
           const domain = new GDSDomainDTO('UPDATE-STATUS', result);
+          res.status(200).send(domain);
+        }
+      });
+    });
+
+    app.get(API + 'jobs', (req, res) => {
+      eventJobService.getJobs((err, result) => {
+        if (err) {
+          res.status(500).send(new GDSDomainDTO('ERROR_MESSAGE', err.message));
+        } else {
+          const resultDTOData =  [];
+          const domain = new GDSDomainDTO('GET-JOBS', resultDTOData);
+          if (result) {
+            result.forEach((job) => {
+              const jobDom = new GDSDomainDTO('JOB', job);
+              jobDom.addDelete('removeJob', 'http://' + req.headers.host + API + 'remove-job/' + job._id);
+              jobDom.addPut('setJobToInProgress', 'http://' + req.headers.host + API + 'jobs/' + job._id + '/set-status/IN_PROGRESS');
+              jobDom.addPut('setJobToCompleted', 'http://' + req.headers.host + API + 'jobs/' + job._id + '/set-status/COMPLETED');
+              jobDom.addPut('setJobToLocked', 'http://' + req.headers.host + API + 'jobs/' + job._id + '/set-status/LOCKED');
+              jobDom.addPut('setJobToStopped', 'http://' + req.headers.host + API + 'jobs/' + job._id + '/set-status/STOPPED');
+              jobDom.addPut('setJobToScheduled', 'http://' + req.headers.host + API + 'jobs/' + job._id + '/set-status/SCHEDULED');
+              jobDom.addPut('setJobToNew', 'http://' + req.headers.host + API + 'jobs/' + job._id + '/set-status/NEW');
+              jobDom.addPut('setJobToOnHold', 'http://' + req.headers.host + API + 'jobs/' + job._id + '/set-status/ON_HOLD');
+              resultDTOData.push(jobDom);
+            });
+          }
           res.status(200).send(domain);
         }
       });
