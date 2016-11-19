@@ -17,7 +17,7 @@ export default class RunProcessEvent {
             message: 'Failed creating event job for process event type'
           });
         } else {
-          new CreateEventTypeProcess(processJob._id, context.data.isAsync, (errEventTypeProcess, resultProcess) => {
+          new CreateEventTypeProcess(processJob._id, context.data.method, (errEventTypeProcess, resultProcess) => {
             if (errEventTypeProcess) {
               global.gdsLogger.logError(errEventTypeProcess);
               new RemoveEventJobById(processJob._id, () => {

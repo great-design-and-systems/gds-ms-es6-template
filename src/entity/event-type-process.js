@@ -6,7 +6,10 @@ const EventTypeProcessSchema = mongoose.Schema({
         type: String,
         required: [true, 'Event Job ID is required.']
     },
-    isAsync: Boolean,
+    method: {
+        type: String,
+        required: [true, 'Method is required.']
+    },
     createdOn: { type: Date, default: Date.now }
 });
 EventTypeProcessSchema.plugin(mongoosePaginate);

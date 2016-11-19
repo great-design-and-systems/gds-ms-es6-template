@@ -56,7 +56,20 @@ export default class EventResource {
               err.message
             ));
           } else {
-            res.status(200).send(new GDSDomainDTO('GET-EVENTS', result));
+            const data = [];
+            const domain = new GDSDomainDTO('GET-EVENTS', data);
+            if (result && result.docs) {
+              let docDom;
+              result.docs.forEach(doc => {
+                docDom = new GDSDomainDTO('EVENT', doc);
+                docDom.addGet('getEventsById', 'http://' + req.headers.host + API + 'get-event-by-id/' + doc._id);
+                docDom.addPut('updateEvent', 'http://' + req.headers.host + API + 'update-event/' + doc._id);
+                docDom.addDelete('removeEvent', 'http://' + req.headers.host + API + 'remove-event/' + doc._id);
+                docDom.addGet('getEventByName', 'http://' + req.headers.host + API + 'get-event-by-name/' + doc.name);
+                data.push(docDom);
+              });
+            }
+            res.status(200).send(domain);
           }
         });
     });
@@ -239,7 +252,7 @@ export default class EventResource {
         if (err) {
           res.status(500).send(new GDSDomainDTO('ERROR_MESSAGE', err.message));
         } else {
-          const resultDTOData =  [];
+          const resultDTOData = [];
           const domain = new GDSDomainDTO('GET-JOBS', resultDTOData);
           if (result) {
             result.forEach((job) => {
