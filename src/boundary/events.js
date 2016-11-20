@@ -1,13 +1,14 @@
 import CreateEvent from '../control/event/create-event';
-import GetEvents from '../control/event/get-events';
 import GetEventById from '../control/event/get-event-by-id';
-import UpdateEvent from '../control/event/update-event';
-import RemoveEventById from '../control/event/remove-event-by-id';
 import GetEventByName from '../control/event/get-event-by-name';
+import GetEvents from '../control/event/get-events';
+import RemoveEventById from '../control/event/remove-event-by-id';
+import UpdateEvent from '../control/event/update-event';
+
 export default class EventService {
 
-  createEvent(name, eventType, service, callback) {
-    new CreateEvent(name, eventType, service, callback);
+  createEvent(name, eventType, action, callback) {
+    new CreateEvent(name, eventType, action, callback);
   }
 
   getEvents(paginate, callback) {

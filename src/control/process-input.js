@@ -1,5 +1,9 @@
+import ProcessBody from './event-context/process-body';
+import ProcessHeader from './event-context/process-header';
+import ProcessPath from './event-context/process-path';
+import ProcessQuery from './event-context/process-query';
 import batch from 'batchflow';
-import ProcessBody from '../control/event-context/process-body';
+
 export default class ProcessInput {
   constructor(eventJobId, input, callback) {
     try {
@@ -9,24 +13,51 @@ export default class ProcessInput {
           switch (field) {
             case 'HEADER':
             case 'header':
+              new ProcessHeader(eventJobId, content, (errProcess, result) => {
+                if (errProcess) {
+                  global.gdsLogger.logError(errProcess);
+                  callback(errProcess);
+                } else {
+                  resultInput.header = result;
+                  next();
+                }
+              });
               break;
             case 'BODY':
             case 'body':
-              new ProcessBody(eventJobId, content, (errBody, resultBody) => {
-                if (errBody) {
-                  global.gdsLogger.logError(errBody);
-                  callback(err);
+              new ProcessBody(eventJobId, content, (errProcess, result) => {
+                if (errProcess) {
+                  global.gdsLogger.logError(errProcess);
+                  callback(errProcess);
                 } else {
-                  resultInput.body = resultBody;
+                  resultInput.body = result;
                   next();
                 }
               });
               break;
             case 'PATH':
             case 'path':
+              new ProcessPath(eventJobId, content, (errProcess, result) => {
+                if (errProcess) {
+                  global.gdsLogger.logError(errProcess);
+                  callback(errProcess);
+                } else {
+                  resultInput.path = result;
+                  next();
+                }
+              });
               break;
             case 'QUERY':
             case 'query':
+              new ProcessQuery(eventJobId, content, (errProcess, result) => {
+                if (errProcess) {
+                  global.gdsLogger.logError(errProcess);
+                  callback(errProcess);
+                } else {
+                  resultInput.query = result;
+                  next();
+                }
+              });
               break;
           }
         }).end(() => {

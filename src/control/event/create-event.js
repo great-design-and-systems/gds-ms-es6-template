@@ -1,10 +1,11 @@
 import EventModel from '../../entity/event';
+
 export default class CreateEvent {
-    constructor(name, eventType, service, callback) {
+    constructor(name, eventType, action, callback) {
         EventModel.create({
             name: name,
             eventType: eventType,
-            service: service
+            action: action
         }, (err, result) => {
             if (err) {
                 global.gdsLogger.logError(err);
