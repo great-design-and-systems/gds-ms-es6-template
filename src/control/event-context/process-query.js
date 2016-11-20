@@ -72,6 +72,6 @@ function processQueryArray(eventJobId, field, values, callback) {
                 });
         })
         .end(() => {
-            callback(resultQuery);
+            callback(undefined, resultQuery);
         });
 }

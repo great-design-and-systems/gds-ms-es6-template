@@ -8,11 +8,11 @@ import lodash from 'lodash';
 
 export default class ProcessHeader {
     constructor(eventJobId, inputHeader, callback) {
-        ProcessHeader(eventJobId, inputHeader, callback);
+        processHeader(eventJobId, inputHeader, callback);
     }
 }
 
-function ProcessHeader(eventJobId, inputHeader, callback) {
+function processHeader(eventJobId, inputHeader, callback) {
     const resultHeader = [];
     batch(inputHeader).sequential()
         .each((field, value, next) => {
