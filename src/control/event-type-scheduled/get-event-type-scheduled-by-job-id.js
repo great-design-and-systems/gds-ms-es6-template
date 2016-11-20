@@ -2,7 +2,7 @@ import EventTypeScheduledModel from '../../entity/event-type-scheduled';
 
 export default class GetEventTypeScheduledByJobId {
   constructor(eventJobId, callback) {
-    EventTypeScheduledModel.find({
+    EventTypeScheduledModel.findOne({
       eventJobId: eventJobId
     }, (err, result) => {
       if (err) {

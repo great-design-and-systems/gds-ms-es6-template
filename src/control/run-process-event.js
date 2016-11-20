@@ -8,8 +8,9 @@ export default class RunProcessEvent {
     constructor(eventName, context, callback) {
         try {
             const resultJob = {};
+            const status = context.status ? context.status : 'NEW';
             contextValidation(context);
-            new CreateEventJob(eventName, context.session, 'NEW', 'PROCESS', context.data.action, (errorJob, processJob) => {
+            new CreateEventJob(eventName, context.session, status, 'PROCESS', context.data.action, (errorJob, processJob) => {
                 try {
                     if (errorJob) {
                         global.gdsLogger.logError(errorJob);
