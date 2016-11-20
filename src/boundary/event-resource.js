@@ -1,10 +1,10 @@
-import EventService from './events';
-import EventJobService from './event-jobs';
-
 import {
   GDSDomainDTO,
-  GDSDomainPaginateHelper
+  GDSDomainPaginateHelper,
 } from 'gds-config';
+
+import EventJobService from './event-jobs';
+import EventService from './events';
 
 const API = process.env.API_NAME || '/api/event/';
 
@@ -32,7 +32,7 @@ export default class EventResource {
     });
 
     app.post(API + 'create-event', (req, res) => {
-      eventService.createEvent(req.body.name, req.body.eventType, req.body.service, (err, result) => {
+      eventService.createEvent(req.body.name, req.body.eventType, req.body.action, (err, result) => {
         if (err) {
           res.status(500).send(new GDSDomainDTO('ERROR_MESSAGE',
             err.message

@@ -8,6 +8,7 @@ const EventTypeProcessSchema = mongoose.Schema({
     },
     method: {
         type: String,
+        enum: ['PUT', 'POST', 'DELETE'],
         required: [true, 'Method is required.']
     },
     createdOn: { type: Date, default: Date.now }
