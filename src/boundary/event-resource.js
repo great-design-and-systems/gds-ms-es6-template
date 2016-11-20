@@ -15,13 +15,13 @@ export default class EventResource {
 
     app.get('/', (req, res) => {
       const domain = new GDSDomainDTO();
-      domain.addPost('createEvent', 'http://' + req.headers.host + API + 'create-event');
-      domain.addGet('getEvents', 'http://' + req.headers.host + API + 'get-events');
-      domain.addGet('getEventsById', 'http://' + req.headers.host + API + 'get-event-by-id/:eventId');
-      domain.addPut('updateEvent', 'http://' + req.headers.host + API + 'update-event/:eventId');
-      domain.addDelete('removeEvent', 'http://' + req.headers.host + API + 'remove-event/:eventId');
-      domain.addGet('getEventByName', 'http://' + req.headers.host + API + 'get-event-by-name/:eventName');
-      domain.addPost('createJob', 'http://' + req.headers.host + API + 'create-job/:eventName');
+      // domain.addPost('createEvent', 'http://' + req.headers.host + API + 'create-event');
+      // domain.addGet('getEvents', 'http://' + req.headers.host + API + 'get-events');
+      // domain.addGet('getEventsById', 'http://' + req.headers.host + API + 'get-event-by-id/:eventId');
+      // domain.addPut('updateEvent', 'http://' + req.headers.host + API + 'update-event/:eventId');
+      // domain.addDelete('removeEvent', 'http://' + req.headers.host + API + 'remove-event/:eventId');
+      // domain.addGet('getEventByName', 'http://' + req.headers.host + API + 'get-event-by-name/:eventName');
+      domain.addPost('createJob', 'http://' + req.headers.host + API + 'create-job');
       domain.addDelete('removeJob', 'http://' + req.headers.host + API + 'remove-job/:eventJobId');
       domain.addGet('getContextFieldById', 'http://' + req.headers.host + API + 'get-context-field-by-id/:contextId');
       domain.addDelete('removeContextFieldById', 'http://' + req.headers.host + API + 'remove-context-field-by-id/:contextId');
@@ -173,9 +173,9 @@ export default class EventResource {
       });
     });
 
-    app.post(API + 'create-job/:eventName', (req, res) => {
+    app.post(API + 'create-job', (req, res) => {
       const eventName = req.params.eventName;
-      eventJobService.createEventJob(eventName, req.body, (err, result) => {
+      eventJobService.createEventJob(req.body, (err, result) => {
         if (err) {
           res.status(500).send(new GDSDomainDTO('ERROR_MESSAGE', err.message));
         } else {

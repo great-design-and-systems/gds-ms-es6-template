@@ -22,16 +22,31 @@ export default class EventJobService {
   getJobs(callback) {
     new GetEventJobs(callback);
   }
-  createEventJob(eventName, context, callback) {
-    new GetEventByName(eventName, (err, event) => {
-      switch (event.eventType) {
+  createEventJob(context, callback) {
+    try {
+      eventValidation(context);
+      const eventName = context.data.eventName;
+      const eventType = context.data.eventType;
+
+      switch (eventType) {
         case 'PROCESS':
-          new RunProcessEvent(event, context, callback.bind(this));
+          new RunProcessEvent(eventName, context, callback.bind(this));
           break;
         case 'SCHEDULED':
           break;
       }
-    });
+
+    } catch (err) {
+      if (err instanceof Error) {
+        callback({
+          message: err.message
+        });
+      } else {
+        callback({
+          message: 'Event job creation failed.'
+        });
+      }
+    }
   }
   removeEventJob(eventJobId, callback) {
     new GetEventJobById(eventJobId, (errEventJob, eventJob) => {
@@ -99,5 +114,20 @@ export default class EventJobService {
         new UpdateEventJobStatusToOnHold(eventJobId, callback);
         break;
     }
+  }
+}
+
+function eventValidation(context) {
+  if (!context) {
+    throw new Error('Request body is required.');
+  }
+  else if (!context.data) {
+    throw new Error('Request data is required.');
+  } else if (!context.data.eventType) {
+    throw new Error('data.eventType is required.');
+  } else if (!context.data.eventName) {
+    throw new Error('data.eventName is required.');
+  } else if (!context.session) {
+    throw new Error('Request session is required.');
   }
 }

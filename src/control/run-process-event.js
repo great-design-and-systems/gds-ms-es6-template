@@ -5,37 +5,63 @@ import batch from 'batchflow';
 import lodash from 'lodash';
 
 export default class RunProcessEvent {
-    constructor(event, context, callback) {
-        const resultJob = {};
-        new CreateEventJob(event.name, context.session, 'NEW', 'PROCESS', (errorJob, processJob) => {
-            try {
-                if (errorJob) {
-                    global.gdsLogger.logError(errorJob);
-                    callback({
-                        message: 'Failed creating event job for process event type'
-                    });
-                } else {
-                    new ProcessInput(processJob._id, context.input, (errProcessInput, resultInput) => {
-                        if (errProcessInput) {
-                            global.gdsLogger.logError(errProcessInput);
-                            new RemoveEventJobById(processJob._id, () => {
-                                callback({
-                                    message: 'Failed creating event context for job id ' + processJob._id
-                                });
+    constructor(eventName, context, callback) {
+        try {
+            const resultJob = {};
+            contextValidation(context);
+            new CreateEventJob(eventName, context.session, 'NEW', 'PROCESS', context.data.action, (errorJob, processJob) => {
+                try {
+                    if (errorJob) {
+                        global.gdsLogger.logError(errorJob);
+                        callback({
+                            message: 'Failed creating event job for process event type'
+                        });
+                    } else {
+                        resultJob.jobId = processJob._id;
+                        resultJob.eventType = 'PROCESS';
+                        resultJob.eventName = eventName;
+                        resultJob.session = context.session;
+                        if (context.input) {
+                            new ProcessInput(processJob._id, context.input, (errProcessInput, resultInput) => {
+                                if (errProcessInput) {
+                                    global.gdsLogger.logError(errProcessInput);
+                                    new RemoveEventJobById(processJob._id, () => {
+                                        callback({
+                                            message: 'Failed creating event context for job id ' + processJob._id
+                                        });
+                                    });
+                                } else {
+                                    callback(undefined, resultJob);
+                                }
                             });
                         } else {
-                            resultJob.jobId = processJob._id;
-                            resultJob.context = resultInput;
                             callback(undefined, resultJob);
                         }
+
+                    }
+                } catch (errorJob) {
+                    global.gdsLogger.logError(errorJob);
+                    callback({
+                        message: 'Failed creating job for ' + eventName
                     });
                 }
-            } catch (errorJob) {
-                global.gdsLogger.logError(errorJob);
+            });
+        } catch (err) {
+            if (err instanceof Error) {
                 callback({
-                    message: 'Failed creating job for ' + event.name
+                    message: err.message
+                });
+            } else {
+                callback({
+                    message: err
                 });
             }
-        });
+        }
+    }
+}
+
+function contextValidation(context) {
+    if (!context.data.action) {
+        throw new Error('data.action is required for this event type');
     }
 }
